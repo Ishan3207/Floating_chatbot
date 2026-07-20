@@ -80,15 +80,7 @@ fun SettingsScreen(onClose: () -> Unit) {
             Text(if (isListeningForKey) "Press any key combination..." else "Change Hotkey (Current: ${NativeKeyEvent.getKeyText(settings.hotkeyCode)})")
         }
         
-        HorizontalDivider()
-        
-        Text("Opacity: ${(settings.windowOpacity * 100).toInt()}%", style = MaterialTheme.typography.titleMedium)
-        Slider(
-            value = settings.windowOpacity,
-            onValueChange = { SettingsManager.updateSettings(settings.copy(windowOpacity = it)) },
-            valueRange = 0.2f..1.0f
-        )
-        
+
         Spacer(modifier = Modifier.weight(1f))
         
         Button(

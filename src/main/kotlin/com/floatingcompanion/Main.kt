@@ -20,7 +20,7 @@ import androidx.compose.ui.window.*
 import com.floatingcompanion.services.HotkeyManager
 import com.floatingcompanion.services.SettingsManager
 import com.floatingcompanion.ui.screens.MainScreen
-import com.floatingcompanion.ui.theme.BackgroundDark
+import com.floatingcompanion.ui.theme.DraculaBackground
 import com.floatingcompanion.ui.theme.FloatingCompanionTheme
 import dev.datlag.kcef.KCEF
 import kotlinx.coroutines.Dispatchers
@@ -92,11 +92,12 @@ fun main() = application {
         Window(
             onCloseRequest = { isVisible = false },
             state = rememberWindowState(
-                size = DpSize(400.dp, 600.dp),
+                size = DpSize(600.dp, 600.dp),
                 position = WindowPosition(Alignment.TopEnd)
             ),
             undecorated = true,
             transparent = true,
+            resizable = true,
             alwaysOnTop = true,
             title = "Floating Companion"
         ) {
@@ -105,7 +106,7 @@ fun main() = application {
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(RoundedCornerShape(16.dp))
-                        .background(BackgroundDark.copy(alpha = settings.windowOpacity)),
+                        .background(DraculaBackground.copy(alpha = settings.windowOpacity)),
                     contentAlignment = Alignment.Center
                 ) {
                     if (!isInitialized) {

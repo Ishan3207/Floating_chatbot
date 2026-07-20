@@ -20,9 +20,13 @@ fun WebViewContainer(
     }
     
     val state = rememberWebViewState(url)
+    val navigator = com.multiplatform.webview.web.rememberWebViewNavigator()
+
+    // Removed CSS injection for stable app
     
     WebView(
         state = state,
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
+        navigator = navigator
     )
 }
