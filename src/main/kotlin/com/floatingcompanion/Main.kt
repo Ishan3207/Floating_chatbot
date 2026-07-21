@@ -1,6 +1,10 @@
 package com.floatingcompanion
 
 import androidx.compose.foundation.background
+import androidx.compose.ui.awt.ComposeWindow
+import com.sun.jna.Native
+import com.sun.jna.Pointer
+import com.sun.jna.win32.StdCallLibrary
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -27,6 +31,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import kotlin.system.exitProcess
+
+import com.sun.jna.platform.win32.WinDef.HWND
+
+interface User32 : StdCallLibrary {
+    companion object {
+        val INSTANCE: User32 = Native.load("user32", User32::class.java)
+    }
+    
+    fun SetWindowDisplayAffinity(hWnd: HWND, dwAffinity: Int): Boolean
+}
 
 fun main() = application {
     var isInitialized by remember { mutableStateOf(false) }
@@ -101,6 +115,37 @@ fun main() = application {
             alwaysOnTop = true,
             title = "Floating Companion"
         ) {
+            val composeWindow = window as? ComposeWindow
+            
+            LaunchedEffect(composeWindow) {
+                if (composeWindow != null) {
+                    try {
+                        val hwndNative = HWND(Pointer(Native.getWindowID(composeWindow)))
+                        val user32Platform = com.sun.jna.platform.win32.User32.INSTANCE
+                        
+                        val hwndParent = user32Platform.GetAncestor(hwndNative, 1) // GA_PARENT
+                        val hwndRoot = user32Platform.GetAncestor(hwndNative, 2) // GA_ROOT
+                        val hwndRootOwner = user32Platform.GetAncestor(hwndNative, 3) // GA_ROOTOWNER
+                        
+                        val hwndsToTry = listOfNotNull(hwndNative, hwndRootOwner, hwndRoot, hwndParent).filter { it.pointer != null }.distinctBy { it.pointer }
+                        
+                        val wdaExcludeFromCapture = 0x00000011
+                        val wdaMonitor = 0x00000001
+                        
+                        for (hwnd in hwndsToTry) {
+                            var success = User32.INSTANCE.SetWindowDisplayAffinity(hwnd, wdaExcludeFromCapture)
+                            println("SetWindowDisplayAffinity (0x11) for HWND $hwnd: $success")
+                            if (!success) {
+                                success = User32.INSTANCE.SetWindowDisplayAffinity(hwnd, wdaMonitor)
+                                println("SetWindowDisplayAffinity (0x01) for HWND $hwnd: $success")
+                            }
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
             FloatingCompanionTheme {
                 Box(
                     modifier = Modifier
