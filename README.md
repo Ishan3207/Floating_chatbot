@@ -12,10 +12,12 @@ A sleek, glassmorphic floating desktop companion app built with Kotlin and JetBr
 
 This project uses Gradle. If you are on Windows, we have provided helper scripts to make setup instant without needing to manually configure Java environments.
 
-1. **Run the App:**
-   Simply double-click `run_app.bat`. This will automatically set up a local JDK environment, download the Chromium embedded engine (KCEF) on first launch, and open the app.
+1. **Quick Setup:**
+   Run `setup.bat` first to download the required JDK environment.
    
-2. **Build the Installer:**
+2. **Run the App:**
+   Simply double-click `run_app.bat`. This will automatically use the local JDK environment, download the Chromium embedded engine (KCEF) on first launch, and open the app.
+3. **Build the Installer:**
    Double-click `build_exe.bat`. This will package the application and bundle the Java runtime into a standalone `.exe` installer inside the `build/compose/binaries/main/app/` (or `\exe\`) folder. You can distribute this `.exe` to users who do not have Java installed.
 
 ## 🛠️ Technologies Used
