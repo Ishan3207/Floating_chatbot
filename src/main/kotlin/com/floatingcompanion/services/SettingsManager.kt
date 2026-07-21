@@ -9,12 +9,11 @@ import kotlinx.serialization.json.Json
 import java.io.File
 
 object SettingsManager {
+    private val json = Json { prettyPrint = true; ignoreUnknownKeys = true }
     private val settingsFile = File(System.getProperty("user.home"), ".floating-companion/settings.json")
     
     private val _settings = MutableStateFlow(loadSettings())
     val settings: StateFlow<AppSettings> = _settings.asStateFlow()
-    
-    private val json = Json { prettyPrint = true; ignoreUnknownKeys = true }
 
     private fun loadSettings(): AppSettings {
         if (!settingsFile.exists()) return AppSettings()
