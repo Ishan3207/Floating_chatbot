@@ -28,8 +28,7 @@ dependencies {
     // Global hotkeys
     implementation("com.github.kwhat:jnativehook:2.2.2")
     
-    // WebView
-    implementation("io.github.kevinnzou:compose-webview-multiplatform:1.9.40-alpha04")
+    // Removed WebView and KCEF for lighter app
     
     // Settings persistence
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
@@ -42,6 +41,7 @@ dependencies {
 compose.desktop {
     application {
         mainClass = "com.floatingcompanion.MainKt"
+        jvmArgs("-Xmx512m")
         
         nativeDistributions {
             targetFormats(org.jetbrains.compose.desktop.application.dsl.TargetFormat.Exe, org.jetbrains.compose.desktop.application.dsl.TargetFormat.Msi)
