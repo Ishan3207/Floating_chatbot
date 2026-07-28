@@ -8,6 +8,10 @@ plugins {
 group = "com.floatingcompanion"
 version = "1.0.0"
 
+kotlin {
+    jvmToolchain(21)
+}
+
 repositories {
     google()
     mavenCentral()

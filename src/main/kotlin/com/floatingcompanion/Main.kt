@@ -24,7 +24,6 @@ import androidx.compose.ui.window.*
 import com.floatingcompanion.services.HotkeyManager
 import com.floatingcompanion.services.SettingsManager
 import com.floatingcompanion.ui.screens.MainScreen
-import com.floatingcompanion.ui.theme.DraculaBackground
 import com.floatingcompanion.ui.theme.FloatingCompanionTheme
 import dev.datlag.kcef.KCEF
 import kotlinx.coroutines.Dispatchers
@@ -146,12 +145,12 @@ fun main() = application {
                 }
             }
 
-            FloatingCompanionTheme {
+            FloatingCompanionTheme(provider = settings.selectedProvider) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(RoundedCornerShape(16.dp))
-                        .background(DraculaBackground.copy(alpha = settings.windowOpacity)),
+                        .background(androidx.compose.material3.MaterialTheme.colorScheme.background),
                     contentAlignment = Alignment.Center
                 ) {
                     if (!isInitialized) {
