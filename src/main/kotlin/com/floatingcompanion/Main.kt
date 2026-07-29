@@ -66,6 +66,7 @@ fun main() = application {
                         }
                         settings {
                             cachePath = File("kcef-cache").absolutePath
+                            persistSessionCookies = true
                         }
                     },
                     onError = { 
@@ -101,17 +102,20 @@ fun main() = application {
         }
     }
 
+    val windowState = rememberWindowState(
+        size = DpSize(600.dp, 600.dp),
+        position = WindowPosition(Alignment.Center)
+    )
+    var isAlwaysOnTop by remember { mutableStateOf(false) }
+
     if (isVisible) {
         Window(
             onCloseRequest = { isVisible = false },
-            state = rememberWindowState(
-                size = DpSize(600.dp, 600.dp),
-                position = WindowPosition(Alignment.TopEnd)
-            ),
+            state = windowState,
             undecorated = true,
             transparent = true,
             resizable = true,
-            alwaysOnTop = true,
+            alwaysOnTop = isAlwaysOnTop,
             title = "Floating Companion"
         ) {
             val composeWindow = window as? ComposeWindow
@@ -176,7 +180,10 @@ fun main() = application {
                     } else {
                         MainScreen(
                             onClose = { isVisible = false },
-                            settings = settings
+                            settings = settings,
+                            windowState = windowState,
+                            isAlwaysOnTop = isAlwaysOnTop,
+                            onToggleAlwaysOnTop = { isAlwaysOnTop = !isAlwaysOnTop }
                         )
                     }
                 }

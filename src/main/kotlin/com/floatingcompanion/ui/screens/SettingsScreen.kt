@@ -44,7 +44,7 @@ fun SettingsScreen(onClose: () -> Unit) {
         
         Text("AI Provider", style = MaterialTheme.typography.titleMedium)
         
-        val providers = listOf("ChatGPT", "Claude", "Google Gemini", "Local AI")
+        val providers = listOf("ChatGPT", "Claude", "Google Gemini")
         var expanded by remember { mutableStateOf(false) }
         
         Box {
