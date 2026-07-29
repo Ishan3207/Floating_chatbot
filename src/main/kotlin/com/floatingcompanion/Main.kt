@@ -24,7 +24,6 @@ import androidx.compose.ui.window.*
 import com.floatingcompanion.services.HotkeyManager
 import com.floatingcompanion.services.SettingsManager
 import com.floatingcompanion.ui.screens.MainScreen
-import com.floatingcompanion.ui.theme.DraculaBackground
 import com.floatingcompanion.ui.theme.FloatingCompanionTheme
 import dev.datlag.kcef.KCEF
 import kotlinx.coroutines.Dispatchers
@@ -67,6 +66,7 @@ fun main() = application {
                         }
                         settings {
                             cachePath = File("kcef-cache").absolutePath
+                            persistSessionCookies = true
                         }
                     },
                     onError = { 
@@ -102,17 +102,20 @@ fun main() = application {
         }
     }
 
+    val windowState = rememberWindowState(
+        size = DpSize(600.dp, 600.dp),
+        position = WindowPosition(Alignment.Center)
+    )
+    var isAlwaysOnTop by remember { mutableStateOf(false) }
+
     if (isVisible) {
         Window(
             onCloseRequest = { isVisible = false },
-            state = rememberWindowState(
-                size = DpSize(600.dp, 600.dp),
-                position = WindowPosition(Alignment.TopEnd)
-            ),
+            state = windowState,
             undecorated = true,
             transparent = true,
             resizable = true,
-            alwaysOnTop = true,
+            alwaysOnTop = isAlwaysOnTop,
             title = "Floating Companion"
         ) {
             val composeWindow = window as? ComposeWindow
@@ -146,12 +149,12 @@ fun main() = application {
                 }
             }
 
-            FloatingCompanionTheme {
+            FloatingCompanionTheme(provider = settings.selectedProvider) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(RoundedCornerShape(16.dp))
-                        .background(DraculaBackground.copy(alpha = settings.windowOpacity)),
+                        .background(androidx.compose.material3.MaterialTheme.colorScheme.background),
                     contentAlignment = Alignment.Center
                 ) {
                     if (!isInitialized) {
@@ -177,7 +180,10 @@ fun main() = application {
                     } else {
                         MainScreen(
                             onClose = { isVisible = false },
-                            settings = settings
+                            settings = settings,
+                            windowState = windowState,
+                            isAlwaysOnTop = isAlwaysOnTop,
+                            onToggleAlwaysOnTop = { isAlwaysOnTop = !isAlwaysOnTop }
                         )
                     }
                 }
